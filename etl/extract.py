@@ -1,23 +1,18 @@
 import pandas as pd
-import requests
-from io import StringIO
+import os
 
 def fetch_covid_data():
-    url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    csv_path = os.path.join("data", "owid-covid-latest.csv")
 
-    print("🔄 Downloading data from OWID...")
-    response = requests.get(url, timeout=60)
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"CSV file not found at {csv_path}")
 
-    if response.status_code != 200:
-        raise Exception(f"Failed to fetch data: {response.status_code}")
-
-    csv_data = response.content.decode('utf-8')
-    df = pd.read_csv(StringIO(csv_data))
+    df = pd.read_csv(csv_path)
 
     # Filter hanya Indonesia
     df = df[df['location'] == 'Indonesia']
 
-    # Ambil kolom penting
+    # Ambil kolom yang relevan
     df = df[['date', 'total_cases', 'new_cases', 'total_deaths', 'new_deaths']]
     df['date'] = pd.to_datetime(df['date']).dt.date
 

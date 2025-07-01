@@ -1,0 +1,28 @@
+name: Daily COVID CSV Download
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Setiap hari jam 08:00 WIB (UTC+7 = 01:00 UTC)
+  workflow_dispatch:     # Bisa dijalankan manual juga
+
+jobs:
+  download-csv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download OWID COVID CSV
+        run: |
+          mkdir -p data
+          curl -o data/owid-covid-latest.csv https://covid.ourworldindata.org/data/owid-covid-data.csv
+
+      - name: Commit and push updated CSV
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add data/owid-covid-latest.csv
+          git commit -m "⬆️ Auto-update COVID CSV"
+          git push
+        continue-on-error: true
