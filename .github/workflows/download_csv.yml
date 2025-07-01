@@ -20,8 +20,8 @@ jobs:
 
       - name: Commit and push updated CSV
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "arsiamallahbinhaq"
+          git config user.email "arsiamallahbinhaq@gmail.com"
           git add data/owid-covid-latest.csv
           git commit -m "⬆️ Auto-update COVID CSV"
           git push
